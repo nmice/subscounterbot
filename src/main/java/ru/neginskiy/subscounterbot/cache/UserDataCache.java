@@ -2,11 +2,16 @@ package ru.neginskiy.subscounterbot.cache;
 
 import org.springframework.stereotype.Component;
 import ru.neginskiy.subscounterbot.botapi.BotState;
-import ru.neginskiy.subscounterbot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserProfileData;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * In-memory cache.
+ * usersBotStates: user_id and user's bot state
+ * usersProfileData: user_id  and user's profile data.
+ */
 @Component
 public class UserDataCache implements DataCache {
     private Map<Integer, BotState> usersBotStates = new HashMap<>();

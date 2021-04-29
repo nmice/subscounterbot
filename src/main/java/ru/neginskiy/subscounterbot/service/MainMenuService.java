@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Формирует готовые ответные сообщения в чат.
+ * Управляет отображением главного меню в чате.
  */
 @Service
 public class MainMenuService {
@@ -37,6 +37,7 @@ public class MainMenuService {
         KeyboardRow row3 = new KeyboardRow();
         row1.add(new KeyboardButton("Получить предсказание"));
         row2.add(new KeyboardButton("Моя анкета"));
+        row2.add(new KeyboardButton("Скачать анкету"));
         row3.add(new KeyboardButton("Помощь"));
         keyboard.add(row1);
         keyboard.add(row2);

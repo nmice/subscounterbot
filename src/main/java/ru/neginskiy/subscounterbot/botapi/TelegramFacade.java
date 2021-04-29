@@ -1,16 +1,25 @@
 package ru.neginskiy.subscounterbot.botapi;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.neginskiy.subscounterbot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.neginskiy.subscounterbot.SubsCounterBot;
+import ru.neginskiy.subscounterbot.model.UserProfileData;
 import ru.neginskiy.subscounterbot.cache.UserDataCache;
 import ru.neginskiy.subscounterbot.service.MainMenuService;
+import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
 @Component
 @Slf4j
@@ -18,11 +27,16 @@ public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
     private MainMenuService mainMenuService;
+    private SubsCounterBot subsCounterBot;
+    private ReplyMessagesService messagesService;
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService,
+                          @Lazy SubsCounterBot subsCounterBot, ReplyMessagesService messagesService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
+        this.subsCounterBot = subsCounterBot;
+        this.messagesService = messagesService;
     }
 
     public BotApiMethod<?> handleUpdate(Update update) {
@@ -49,17 +63,23 @@ public class TelegramFacade {
     private SendMessage handleInputMessage(Message message) {
         String inputMsg = message.getText();
         int userId = message.getFrom().getId();
+        long chatId = message.getChatId();
         BotState botState;
         SendMessage replyMessage;
 
         switch (inputMsg) {
             case "/start":
                 botState = BotState.ASK_DESTINY;
+                subsCounterBot.sendPhoto(chatId, messagesService.getReplyText("reply.hello"), "static/images/wizard_logo.jpg");
                 break;
             case "Получить предсказание":
                 botState = BotState.FILLING_PROFILE;
                 break;
             case "Моя анкета":
+                botState = BotState.SHOW_USER_PROFILE;
+                break;
+            case "Скачать анкету":
+                subsCounterBot.sendDocument(chatId, "Ваша анкета", getUsersProfile(userId));
                 botState = BotState.SHOW_USER_PROFILE;
                 break;
             case "Помощь":
@@ -82,6 +102,7 @@ public class TelegramFacade {
         final long chatId = buttonQuery.getMessage().getChatId();
         final int userId = buttonQuery.getFrom().getId();
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
+
 
         //From Destiny choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
@@ -111,13 +132,26 @@ public class TelegramFacade {
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         }
         return callBackAnswer;
-
     }
+
+
     private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert, CallbackQuery callbackquery) {
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
         answerCallbackQuery.setCallbackQueryId(callbackquery.getId());
         answerCallbackQuery.setShowAlert(alert);
         answerCallbackQuery.setText(text);
         return answerCallbackQuery;
+    }
+
+    @SneakyThrows
+    public File getUsersProfile(int userId) {
+        UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
+        File profileFile = ResourceUtils.getFile("classpath:static/docs/users_profile.txt");
+
+        try (FileWriter fw = new FileWriter(profileFile.getAbsoluteFile());
+             BufferedWriter bw = new BufferedWriter(fw)) {
+            bw.write(userProfileData.toString());
+        }
+        return profileFile;
     }
 }

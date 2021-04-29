@@ -7,6 +7,7 @@ import ru.neginskiy.subscounterbot.botapi.BotState;
 import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
 import ru.neginskiy.subscounterbot.service.MainMenuService;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
+import ru.neginskiy.subscounterbot.utils.Emojis;
 
 @Component
 public class MainMenuHandler implements InputMessageHandler {
@@ -20,7 +21,7 @@ public class MainMenuHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        return mainMenuService.getMainMenuMessage(message.getChatId(), messagesService.getReplyText("reply.showMainMenu"));
+        return mainMenuService.getMainMenuMessage(message.getChatId(), messagesService.getReplyText("reply.showMainMenu", Emojis.MAGE));
     }
 
     @Override
