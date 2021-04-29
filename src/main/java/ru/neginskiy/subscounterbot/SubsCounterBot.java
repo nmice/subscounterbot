@@ -4,27 +4,31 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.neginskiy.subscounterbot.botapi.TelegramFacade;
 
 public class SubsCounterBot extends TelegramWebhookBot {
-    private String getBotUsername;
-    private String getBotToken;
     private String webHookPath;
+    private String botUserName;
+    private String botToken;
 
-    public SubsCounterBot(DefaultBotOptions botOptions) {
+    private TelegramFacade telegramFacade;
+
+
+    public SubsCounterBot(DefaultBotOptions botOptions, TelegramFacade telegramFacade) {
         super(botOptions);
+        this.telegramFacade = telegramFacade;
+    }
+
+
+    @Override
+    public String getBotToken() {
+        return botToken;
     }
 
     @Override
     public String getBotUsername() {
-        return getBotUsername;
-    }
-
-    @Override
-    public String getBotToken() {
-        return getBotToken;
+        return botUserName;
     }
 
     @Override
@@ -34,27 +38,20 @@ public class SubsCounterBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        Message message = update.getMessage();
-        if (message != null && message.hasText()) {
-            long chatId = message.getChatId();
-            try {
-                execute(new SendMessage(String.valueOf(chatId), "Hi " + update.getMessage().getText()));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public void setBotUserName(String getBotUsername) {
-        this.getBotUsername = getBotUsername;
-    }
-
-    public void setBotToken(String getBotToken) {
-        this.getBotToken = getBotToken;
+        SendMessage replyMessageToUser = telegramFacade.handleUpdate(update);
+        return replyMessageToUser;
     }
 
     public void setWebHookPath(String webHookPath) {
         this.webHookPath = webHookPath;
     }
+
+    public void setBotUserName(String botUserName) {
+        this.botUserName = botUserName;
+    }
+
+    public void setBotToken(String botToken) {
+        this.botToken = botToken;
+    }
+
 }
