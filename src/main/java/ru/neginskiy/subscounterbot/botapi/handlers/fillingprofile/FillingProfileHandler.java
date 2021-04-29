@@ -12,6 +12,7 @@ import ru.neginskiy.subscounterbot.cache.UserDataCache;
 import ru.neginskiy.subscounterbot.model.UserProfileData;
 import ru.neginskiy.subscounterbot.service.PredictionService;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
+import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
 import java.util.ArrayList;
@@ -26,12 +27,14 @@ public class FillingProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
     private PredictionService predictionService;
+    private UsersProfileDataService profileDataService;
 
     public FillingProfileHandler(UserDataCache userDataCache, ReplyMessagesService messagesService,
-                                 PredictionService predictionService) {
+                                 PredictionService predictionService, UsersProfileDataService profileDataService) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
         this.predictionService = predictionService;
+        this.profileDataService = profileDataService;
     }
 
     @Override
@@ -100,6 +103,10 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         if (botState.equals(BotState.PROFILE_FILLED)) {
             profileData.setSong(usersAnswer);
+            profileData.setChatId(chatId);
+
+            profileDataService.saveUserProfileData(profileData);
+
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
 
             String profileFilledMessage = messagesService.getReplyText("reply.profileFilled",
