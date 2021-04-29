@@ -1,11 +1,17 @@
 package ru.neginskiy.subscounterbot;
 
+import lombok.SneakyThrows;
+import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.neginskiy.subscounterbot.botapi.TelegramFacade;
+
+import java.io.File;
 
 public class SubsCounterBot extends TelegramWebhookBot {
     private String webHookPath;
@@ -14,12 +20,10 @@ public class SubsCounterBot extends TelegramWebhookBot {
 
     private TelegramFacade telegramFacade;
 
-
     public SubsCounterBot(DefaultBotOptions botOptions, TelegramFacade telegramFacade) {
         super(botOptions);
         this.telegramFacade = telegramFacade;
     }
-
 
     @Override
     public String getBotToken() {
@@ -38,8 +42,7 @@ public class SubsCounterBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        SendMessage replyMessageToUser = telegramFacade.handleUpdate(update);
-        return replyMessageToUser;
+        return telegramFacade.handleUpdate(update);
     }
 
     public void setWebHookPath(String webHookPath) {
@@ -52,6 +55,24 @@ public class SubsCounterBot extends TelegramWebhookBot {
 
     public void setBotToken(String botToken) {
         this.botToken = botToken;
+    }
+
+    @SneakyThrows
+    public void sendPhoto(long chatId, String imageCaption, String imagePath) {
+        File image = ResourceUtils.getFile("classpath:" + imagePath);
+        SendPhoto sendPhoto = new SendPhoto().setPhoto(image);
+        sendPhoto.setChatId(chatId);
+        sendPhoto.setCaption(imageCaption);
+        execute(sendPhoto);
+    }
+
+    @SneakyThrows
+    public void sendDocument(long chatId, String caption, File sendFile) {
+        SendDocument sendDocument = new SendDocument();
+        sendDocument.setChatId(chatId);
+        sendDocument.setCaption(caption);
+        sendDocument.setDocument(sendFile);
+        execute(sendDocument);
     }
 
 }
