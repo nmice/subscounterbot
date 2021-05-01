@@ -31,13 +31,13 @@ public class BotStateContext {
 
     private boolean isFillingProfileState(BotState currentState) {
         switch (currentState) {
-            case ASK_NAME:
-            case ASK_AGE:
-            case ASK_GENDER:
+            case ASK_SOCIAL_MEDIA:
+            case ASK_INSTA_LOGIN:
+            case ASK_TWITTER_LOGIN:
             case ASK_NUMBER:
             case ASK_MOVIE:
             case ASK_SONG:
-            case ASK_COLOR:
+            case ASK_YOUTUBE_LOGIN:
             case FILLING_PROFILE:
             case PROFILE_FILLED:
                 return true;

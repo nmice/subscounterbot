@@ -69,7 +69,7 @@ public class TelegramFacade {
 
         switch (inputMsg) {
             case "/start":
-                botState = BotState.ASK_DESTINY;
+                botState = BotState.ASK_WILL_WE_WORK;
                 subsCounterBot.sendPhoto(chatId, messagesService.getReplyText("reply.hello"), "static/images/wizard_logo.jpg");
                 break;
             case "Получить предсказание":
@@ -107,7 +107,7 @@ public class TelegramFacade {
         //From Destiny choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
             callBackAnswer = new SendMessage(chatId, "Как тебя зовут ?");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_INSTA_LOGIN);
         } else if (buttonQuery.getData().equals("buttonNo")) {
             callBackAnswer = sendAnswerCallbackQuery("Возвращайся, когда будешь готов", false, buttonQuery);
         } else if (buttonQuery.getData().equals("buttonIwillThink")) {
@@ -119,13 +119,13 @@ public class TelegramFacade {
             UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
             userProfileData.setGender("М");
             userDataCache.saveUserProfileData(userId, userProfileData);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_COLOR);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE_LOGIN);
             callBackAnswer = new SendMessage(chatId, "Твоя любимая цифра");
         } else if (buttonQuery.getData().equals("buttonWoman")) {
             UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
             userProfileData.setGender("Ж");
             userDataCache.saveUserProfileData(userId, userProfileData);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_COLOR);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE_LOGIN);
             callBackAnswer = new SendMessage(chatId, "Твоя любимая цифра");
 
         } else {

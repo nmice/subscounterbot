@@ -26,7 +26,7 @@ public class UserDataCache implements DataCache {
     public BotState getUsersCurrentBotState(int userId) {
         BotState botState = usersBotStates.get(userId);
         if (botState == null) {
-            botState = BotState.ASK_DESTINY;
+            botState = BotState.ASK_WILL_WE_WORK;
         }
 
         return botState;

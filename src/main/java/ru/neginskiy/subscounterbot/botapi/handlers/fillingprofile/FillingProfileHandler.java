@@ -40,7 +40,7 @@ public class FillingProfileHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
-            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_NAME);
+            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_SOCIAL_MEDIA);
         }
         return processUsersInput(message);
     }
@@ -60,18 +60,18 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         SendMessage replyToUser = null;
 
-        if (botState.equals(BotState.ASK_NAME)) {
+        if (botState.equals(BotState.ASK_SOCIAL_MEDIA)) {
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askName");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_INSTA_LOGIN);
         }
 
-        if (botState.equals(BotState.ASK_AGE)) {
+        if (botState.equals(BotState.ASK_INSTA_LOGIN)) {
             profileData.setName(usersAnswer);
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_GENDER);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TWITTER_LOGIN);
         }
 
-        if (botState.equals(BotState.ASK_GENDER)) {
+        if (botState.equals(BotState.ASK_TWITTER_LOGIN)) {
             profileData.setAge(Integer.parseInt(usersAnswer));
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askGender");
             replyToUser.setReplyMarkup(getGenderButtonsMarkup());
@@ -80,10 +80,10 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_NUMBER)) {
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askNumber");
             profileData.setGender(usersAnswer);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_COLOR);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE_LOGIN);
         }
 
-        if (botState.equals(BotState.ASK_COLOR)) {
+        if (botState.equals(BotState.ASK_YOUTUBE_LOGIN)) {
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askColor");
             profileData.setNumber(Integer.parseInt(usersAnswer));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MOVIE);
