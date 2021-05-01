@@ -22,16 +22,16 @@ public class BotConfig {
     private String botToken;
 
     @Bean
-    public SubsCounterBot myWizardTelegramBot(TelegramFacade telegramFacade) {
+    public SubsCounterBot sourceCounterBot(TelegramFacade telegramFacade) {
         DefaultBotOptions options = ApiContext
                 .getInstance(DefaultBotOptions.class);
 
-        SubsCounterBot myWizardTelegramBot = new SubsCounterBot(options, telegramFacade);
-        myWizardTelegramBot.setBotUserName(botUserName);
-        myWizardTelegramBot.setBotToken(botToken);
-        myWizardTelegramBot.setWebHookPath(webHookPath);
+        SubsCounterBot sourceCounterBot = new SubsCounterBot(options, telegramFacade);
+        sourceCounterBot.setBotUserName(botUserName);
+        sourceCounterBot.setBotToken(botToken);
+        sourceCounterBot.setWebHookPath(webHookPath);
 
-        return myWizardTelegramBot;
+        return sourceCounterBot;
     }
 
     @Bean
