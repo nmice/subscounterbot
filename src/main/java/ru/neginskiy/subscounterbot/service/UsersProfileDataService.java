@@ -1,7 +1,7 @@
 package ru.neginskiy.subscounterbot.service;
 
 import org.springframework.stereotype.Service;
-import ru.neginskiy.subscounterbot.model.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserData;
 import ru.neginskiy.subscounterbot.repository.UserRepository;
 
 import java.util.List;
@@ -18,19 +18,19 @@ public class UsersProfileDataService {
         this.repository = repository;
     }
 
-    public List<UserProfileData> getAllProfiles() {
+    public List<UserData> getAllProfiles() {
         return repository.findAll();
     }
 
-    public void saveUserProfileData(UserProfileData userProfileData) {
-        repository.save(userProfileData);
+    public void saveUserProfileData(UserData userData) {
+        repository.save(userData);
     }
 
     public void deleteUsersProfileData(String profileDataId) {
         repository.deleteById(profileDataId);
     }
 
-    public UserProfileData getUserProfileData(long chatId) {
+    public UserData getUserProfileData(long chatId) {
         return repository.findByChatId(chatId);
     }
 }

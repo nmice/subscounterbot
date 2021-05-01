@@ -9,7 +9,7 @@ import java.util.Random;
  * Данные пользователя
  */
 @Data
-public class UserProfileData implements Serializable {
+public class UserData implements Serializable {
     private String id = new Random().toString();
     private String insta;
     private String twitter;

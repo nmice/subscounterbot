@@ -25,13 +25,13 @@ public class BotStateContext {
     }
 
     private InputMessageHandler findMessageHandler(BotState currentState) {
-        if (isFillingProfileState(currentState)) {
+        if (isFillingDataState(currentState)) {
             return messageHandlers.get(BotState.FILLING_PROFILE);
         }
         return messageHandlers.get(currentState);
     }
 
-    private boolean isFillingProfileState(BotState currentState) {
+    private boolean isFillingDataState(BotState currentState) {
         switch (currentState) {
             case ASK_INSTA:
             case ASK_INSTA_LOGIN:

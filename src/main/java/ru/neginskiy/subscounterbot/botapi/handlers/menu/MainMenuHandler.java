@@ -10,7 +10,7 @@ import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
 /**
- * Обработчик любых текстовых запросов не в процессе заполнения анкеты
+ * Обработчик любых текстовых запросов из шага выбора меню
  */
 @Component
 public class MainMenuHandler implements InputMessageHandler {

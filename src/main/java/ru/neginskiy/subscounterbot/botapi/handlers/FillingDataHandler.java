@@ -1,4 +1,4 @@
-package ru.neginskiy.subscounterbot.botapi.handlers.fillingprofile;
+package ru.neginskiy.subscounterbot.botapi.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.neginskiy.subscounterbot.botapi.BotState;
 import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
 import ru.neginskiy.subscounterbot.cache.DataCache;
-import ru.neginskiy.subscounterbot.model.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserData;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 import ru.neginskiy.subscounterbot.service.StatService;
 import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
@@ -19,16 +19,16 @@ import ru.neginskiy.subscounterbot.utils.Emojis;
  */
 @Slf4j
 @Component
-public class FillingProfileHandler implements InputMessageHandler {
+public class FillingDataHandler implements InputMessageHandler {
     private DataCache userDataCache;
     private ReplyMessagesService messagesService;
     private StatService statService;
     private UsersProfileDataService profileDataService;
     private ButtonsProvider buttonsProvider;
 
-    public FillingProfileHandler(DataCache userDataCache, ReplyMessagesService messagesService,
-                                 StatService statService, UsersProfileDataService profileDataService,
-                                 ButtonsProvider buttonsProvider) {
+    public FillingDataHandler(DataCache userDataCache, ReplyMessagesService messagesService,
+                              StatService statService, UsersProfileDataService profileDataService,
+                              ButtonsProvider buttonsProvider) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
         this.statService = statService;
@@ -54,7 +54,7 @@ public class FillingProfileHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
 
-        UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        UserData profileData = userDataCache.getUserProfileData(userId);
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
         SendMessage replyToUser = null;
 

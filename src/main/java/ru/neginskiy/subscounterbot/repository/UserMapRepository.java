@@ -1,7 +1,7 @@
 package ru.neginskiy.subscounterbot.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.neginskiy.subscounterbot.model.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,16 +13,16 @@ import java.util.Map;
  */
 @Repository
 public class UserMapRepository implements UserRepository {
-    Map<String, UserProfileData> repository = new HashMap<>();
+    Map<String, UserData> repository = new HashMap<>();
 
     @Override
-    public List<UserProfileData> findAll() {
+    public List<UserData> findAll() {
         return new ArrayList<>(repository.values());
     }
 
     @Override
-    public void save(UserProfileData userProfileData) {
-        repository.put(userProfileData.getId(), userProfileData);
+    public void save(UserData userData) {
+        repository.put(userData.getId(), userData);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserMapRepository implements UserRepository {
     }
 
     @Override
-    public UserProfileData findByChatId(long chatId) {
+    public UserData findByChatId(long chatId) {
         return repository.get(String.valueOf(chatId));
     }
 }

@@ -2,7 +2,7 @@ package ru.neginskiy.subscounterbot.cache;
 
 import org.springframework.stereotype.Component;
 import ru.neginskiy.subscounterbot.botapi.BotState;
-import ru.neginskiy.subscounterbot.model.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Component
 public class InMemoryDataCache implements DataCache {
     private Map<Integer, BotState> botStateByUserIdMap = new HashMap<>();
-    private Map<Integer, UserProfileData> usersProfileByUserIdMap = new HashMap<>();
+    private Map<Integer, UserData> usersProfileByUserIdMap = new HashMap<>();
 
     @Override
     public void setUsersCurrentBotState(int userId, BotState botState) {
@@ -33,16 +33,16 @@ public class InMemoryDataCache implements DataCache {
     }
 
     @Override
-    public UserProfileData getUserProfileData(int userId) {
-        UserProfileData userProfileData = usersProfileByUserIdMap.get(userId);
-        if (userProfileData == null) {
-            userProfileData = new UserProfileData();
+    public UserData getUserProfileData(int userId) {
+        UserData userData = usersProfileByUserIdMap.get(userId);
+        if (userData == null) {
+            userData = new UserData();
         }
-        return userProfileData;
+        return userData;
     }
 
     @Override
-    public void saveUserProfileData(int userId, UserProfileData userProfileData) {
-        usersProfileByUserIdMap.put(userId, userProfileData);
+    public void saveUserProfileData(int userId, UserData userData) {
+        usersProfileByUserIdMap.put(userId, userData);
     }
 }

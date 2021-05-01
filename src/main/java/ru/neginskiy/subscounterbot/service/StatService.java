@@ -5,7 +5,7 @@ import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.neginskiy.subscounterbot.model.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserData;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
 /**
@@ -24,7 +24,7 @@ public class StatService {
         this.messagesService = messagesService;
     }
 
-    public String getStatistic(UserProfileData profileData) {
+    public String getStatistic(UserData profileData) {
         String instaSubs = getInstaSubsCount(profileData.getInsta());
         String twitterSubs = getTwitterSubsCount(profileData.getTwitter());
         String youtubeSubs = getYouTubeSubsCount(profileData.getYouTube());

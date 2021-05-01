@@ -1,6 +1,6 @@
 package ru.neginskiy.subscounterbot.repository;
 
-import ru.neginskiy.subscounterbot.model.UserProfileData;
+import ru.neginskiy.subscounterbot.model.UserData;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ import java.util.List;
  * Интерфейс репозитория данных пользователя
  */
 public interface UserRepository {
-    List<UserProfileData> findAll();
+    List<UserData> findAll();
 
-    void save(UserProfileData userProfileData);
+    void save(UserData userData);
 
     void deleteById(String chatId);
 
-    UserProfileData findByChatId(long chatId);
+    UserData findByChatId(long chatId);
 }
