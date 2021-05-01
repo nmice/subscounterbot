@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Управляет отображением главного меню в чате.
+ * Сервис по отображению главного меню в чате
  */
 @Service
 public class MainMenuService {
@@ -19,7 +19,6 @@ public class MainMenuService {
         final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
         final SendMessage mainMenuMessage =
                 createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
-
         return mainMenuMessage;
     }
 
@@ -35,9 +34,8 @@ public class MainMenuService {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
-        row1.add(new KeyboardButton("Получить предсказание"));
-        row2.add(new KeyboardButton("Моя анкета"));
-        row2.add(new KeyboardButton("Скачать анкету"));
+        row1.add(new KeyboardButton("Получить инфо по аккаунту"));
+        row2.add(new KeyboardButton("Мои аккаунты"));
         row3.add(new KeyboardButton("Помощь"));
         keyboard.add(row1);
         keyboard.add(row2);

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Locale;
 
 /**
- * Работает с файлом шаблоном "ответных сообщений" messages.properties
+ * Сервис по работе с файлом - шаблоном ответов (messages.properties)
  */
 @Service
 public class LocaleMessageService {

@@ -9,6 +9,9 @@ import ru.neginskiy.subscounterbot.service.MainMenuService;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
+/**
+ * Обработчик запроса справки по кнопке "Помощь"
+ */
 @Component
 public class HelpMenuHandler implements InputMessageHandler {
     private MainMenuService mainMenuService;
@@ -22,7 +25,7 @@ public class HelpMenuHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         return mainMenuService.getMainMenuMessage(message.getChatId(),
-                messagesService.getReplyText("reply.showHelpMenu", Emojis.MAGE));
+                messagesService.getReplyText("reply.showHelpMenu", Emojis.MOYAI));
     }
 
     @Override

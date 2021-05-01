@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Контекст состояний
+ */
 @Component
 public class BotStateContext {
     private Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
@@ -25,18 +28,16 @@ public class BotStateContext {
         if (isFillingProfileState(currentState)) {
             return messageHandlers.get(BotState.FILLING_PROFILE);
         }
-
         return messageHandlers.get(currentState);
     }
 
     private boolean isFillingProfileState(BotState currentState) {
         switch (currentState) {
-            case ASK_SOCIAL_MEDIA:
+            case ASK_INSTA:
             case ASK_INSTA_LOGIN:
+            case ASK_TWITTER:
             case ASK_TWITTER_LOGIN:
-            case ASK_NUMBER:
-            case ASK_MOVIE:
-            case ASK_SONG:
+            case ASK_YOUTUBE:
             case ASK_YOUTUBE_LOGIN:
             case FILLING_PROFILE:
             case PROFILE_FILLED:

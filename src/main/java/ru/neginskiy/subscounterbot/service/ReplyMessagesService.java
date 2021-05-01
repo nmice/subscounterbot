@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 /**
- * Формирует готовые ответные сообщения в чат.
+ * Сервис формирует готовые ответные сообщения в чат
  */
 @Service
 public class ReplyMessagesService {
@@ -15,8 +15,12 @@ public class ReplyMessagesService {
         this.localeMessageService = messageService;
     }
 
-    public SendMessage getReplyMessage(long chatId, String replyMessage) {
+    public SendMessage getReplyMessageFromLocale(long chatId, String replyMessage) {
         return new SendMessage(chatId, localeMessageService.getMessage(replyMessage));
+    }
+
+    public SendMessage getReplyMessage(long chatId, String replyMessage) {
+        return new SendMessage(chatId, replyMessage);
     }
 
     public SendMessage getReplyMessage(long chatId, String replyMessage, Object... args) {

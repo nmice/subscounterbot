@@ -4,43 +4,42 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.neginskiy.subscounterbot.botapi.BotState;
 import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
-import ru.neginskiy.subscounterbot.cache.UserDataCache;
+import ru.neginskiy.subscounterbot.cache.DataCache;
 import ru.neginskiy.subscounterbot.model.UserProfileData;
-import ru.neginskiy.subscounterbot.service.PredictionService;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
+import ru.neginskiy.subscounterbot.service.StatService;
 import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
+import ru.neginskiy.subscounterbot.service.ButtonsProvider;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Формирует анкету пользователя.
+ * Обработчик состояния заполнения данных FILLING_PROFILE
  */
 @Slf4j
 @Component
 public class FillingProfileHandler implements InputMessageHandler {
-    private UserDataCache userDataCache;
+    private DataCache userDataCache;
     private ReplyMessagesService messagesService;
-    private PredictionService predictionService;
+    private StatService statService;
     private UsersProfileDataService profileDataService;
+    private ButtonsProvider buttonsProvider;
 
-    public FillingProfileHandler(UserDataCache userDataCache, ReplyMessagesService messagesService,
-                                 PredictionService predictionService, UsersProfileDataService profileDataService) {
+    public FillingProfileHandler(DataCache userDataCache, ReplyMessagesService messagesService,
+                                 StatService statService, UsersProfileDataService profileDataService,
+                                 ButtonsProvider buttonsProvider) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
-        this.predictionService = predictionService;
+        this.statService = statService;
         this.profileDataService = profileDataService;
+        this.buttonsProvider = buttonsProvider;
     }
 
     @Override
     public SendMessage handle(Message message) {
         if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
-            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_SOCIAL_MEDIA);
+            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_INSTA);
         }
         return processUsersInput(message);
     }
@@ -57,90 +56,52 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
-
         SendMessage replyToUser = null;
 
-        if (botState.equals(BotState.ASK_SOCIAL_MEDIA)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askName");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_INSTA_LOGIN);
+        if (botState.equals(BotState.ASK_INSTA)) {
+            replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askInsta");
+            replyToUser.setReplyMarkup(buttonsProvider.getYesNoButtonsMarkup("InstaYes", "InstaNo"));
         }
 
         if (botState.equals(BotState.ASK_INSTA_LOGIN)) {
-            profileData.setName(usersAnswer);
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TWITTER_LOGIN);
+            profileData.setInsta(usersAnswer);
+            replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askTwitter");
+            replyToUser.setReplyMarkup(buttonsProvider.getYesNoButtonsMarkup("TwitterYes", "TwitterNo"));
+        }
+
+        if (botState.equals(BotState.ASK_TWITTER)) {
+            replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askTwitterLogin");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE);
         }
 
         if (botState.equals(BotState.ASK_TWITTER_LOGIN)) {
-            profileData.setAge(Integer.parseInt(usersAnswer));
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askGender");
-            replyToUser.setReplyMarkup(getGenderButtonsMarkup());
+            profileData.setTwitter(usersAnswer);
+            replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askYouTube");
+            replyToUser.setReplyMarkup(buttonsProvider.getYesNoButtonsMarkup("YouTubeYes", "YouTubeNo"));
         }
 
-        if (botState.equals(BotState.ASK_NUMBER)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askNumber");
-            profileData.setGender(usersAnswer);
+        if (botState.equals(BotState.ASK_YOUTUBE)) {
+            replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askYouTubeLogin");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE_LOGIN);
         }
 
         if (botState.equals(BotState.ASK_YOUTUBE_LOGIN)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askColor");
-            profileData.setNumber(Integer.parseInt(usersAnswer));
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MOVIE);
-        }
-
-        if (botState.equals(BotState.ASK_MOVIE)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askMovie");
-            profileData.setColor(usersAnswer);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_SONG);
-        }
-
-        if (botState.equals(BotState.ASK_SONG)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askSong");
-            profileData.setMovie(usersAnswer);
             userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
-        }
+            profileData.setYouTube(usersAnswer);
 
-        if (botState.equals(BotState.PROFILE_FILLED)) {
-            profileData.setSong(usersAnswer);
             profileData.setChatId(chatId);
-
             profileDataService.saveUserProfileData(profileData);
 
-            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+            String profileFilledMessage = messagesService.getReplyText("reply.profileFilled", Emojis.SPARKLES);
+            String statMessage = statService.getStatistic(profileData);
 
-            String profileFilledMessage = messagesService.getReplyText("reply.profileFilled",
-                    profileData.getName(), Emojis.SPARKLES);
-            String predictionMessage = predictionService.getPrediction();
-
-            replyToUser = new SendMessage(chatId, String.format("%s%n%n%s %s", profileFilledMessage, Emojis.SCROLL, predictionMessage));
+            replyToUser = new SendMessage(chatId, String.format("%s%n%n%s", profileFilledMessage, statMessage));
             replyToUser.setParseMode("HTML");
         }
 
         userDataCache.saveUserProfileData(userId, profileData);
 
         return replyToUser;
-    }
-
-    private InlineKeyboardMarkup getGenderButtonsMarkup() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        InlineKeyboardButton buttonGenderMan = new InlineKeyboardButton().setText("М");
-        InlineKeyboardButton buttonGenderWoman = new InlineKeyboardButton().setText("Ж");
-
-        //Every button must have callBackData, or else not work !
-        buttonGenderMan.setCallbackData("buttonMan");
-        buttonGenderWoman.setCallbackData("buttonWoman");
-
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(buttonGenderMan);
-        keyboardButtonsRow1.add(buttonGenderWoman);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-
-        return inlineKeyboardMarkup;
     }
 }
 

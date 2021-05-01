@@ -12,6 +12,9 @@ import org.telegram.telegrambots.meta.ApiContext;
 import ru.neginskiy.subscounterbot.SubsCounterBot;
 import ru.neginskiy.subscounterbot.botapi.TelegramFacade;
 
+/**
+ * Конфигурация бота
+ */
 @Setter
 @Getter
 @Configuration
@@ -22,23 +25,22 @@ public class BotConfig {
     private String botToken;
 
     @Bean
-    public SubsCounterBot sourceCounterBot(TelegramFacade telegramFacade) {
+    public SubsCounterBot subsCounterBot(TelegramFacade telegramFacade) {
         DefaultBotOptions options = ApiContext
                 .getInstance(DefaultBotOptions.class);
 
-        SubsCounterBot sourceCounterBot = new SubsCounterBot(options, telegramFacade);
-        sourceCounterBot.setBotUserName(botUserName);
-        sourceCounterBot.setBotToken(botToken);
-        sourceCounterBot.setWebHookPath(webHookPath);
+        SubsCounterBot subsCounterBot = new SubsCounterBot(options, telegramFacade);
+        subsCounterBot.setBotUserName(botUserName);
+        subsCounterBot.setBotToken(botToken);
+        subsCounterBot.setWebHookPath(webHookPath);
 
-        return sourceCounterBot;
+        return subsCounterBot;
     }
 
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource
                 = new ReloadableResourceBundleMessageSource();
-
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;

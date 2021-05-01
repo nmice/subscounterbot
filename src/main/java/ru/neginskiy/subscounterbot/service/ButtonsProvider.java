@@ -1,51 +1,20 @@
-package ru.neginskiy.subscounterbot.botapi.handlers.askdestiny;
+package ru.neginskiy.subscounterbot.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.neginskiy.subscounterbot.botapi.BotState;
-import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
-import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Спрашивает пользователя- хочет ли он получить предсказание.
+ * Сервис отображения кнопок с вариантами ответов
  */
-
-@Slf4j
-@Component
-public class AskDestinyHandler implements InputMessageHandler {
-    private ReplyMessagesService messagesService;
-
-    public AskDestinyHandler(ReplyMessagesService messagesService) {
-        this.messagesService = messagesService;
-    }
-
-    @Override
-    public SendMessage handle(Message message) {
-        return processUsersInput(message);
-    }
-
-    @Override
-    public BotState getHandlerName() {
-        return BotState.ASK_WILL_WE_WORK;
-    }
-
-    private SendMessage processUsersInput(Message inputMsg) {
-        long chatId = inputMsg.getChatId();
-
-        SendMessage replyToUser = messagesService.getReplyMessage(chatId, "reply.askDestiny");
-        replyToUser.setReplyMarkup(getInlineMessageButtons());
-
-        return replyToUser;
-    }
-
-    private InlineKeyboardMarkup getInlineMessageButtons() {
+@Service
+public class ButtonsProvider {
+    public InlineKeyboardMarkup getFourInlineMessageButtons() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonYes = new InlineKeyboardButton().setText("Да");
@@ -73,6 +42,22 @@ public class AskDestinyHandler implements InputMessageHandler {
 
         inlineKeyboardMarkup.setKeyboard(rowList);
 
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup getYesNoButtonsMarkup(String asYes, String asNo) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton buttonYes = new InlineKeyboardButton().setText("Да");
+        InlineKeyboardButton buttonNo = new InlineKeyboardButton().setText("Нет");
+
+        //У всех кнопок должно быть задано callBackData, иначе будет ошибка !
+        buttonYes.setCallbackData(asYes);
+        buttonNo.setCallbackData(asNo);
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = Arrays.asList(buttonYes, buttonNo);
+        List<List<InlineKeyboardButton>> rowList = Collections.singletonList(keyboardButtonsRow1);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
     }
 }

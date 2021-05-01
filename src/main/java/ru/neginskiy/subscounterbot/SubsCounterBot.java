@@ -5,13 +5,15 @@ import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.neginskiy.subscounterbot.botapi.TelegramFacade;
 
 import java.io.File;
 
+/**
+ * Класс бота
+ */
 public class SubsCounterBot extends TelegramWebhookBot {
     private String webHookPath;
     private String botUserName;
@@ -64,14 +66,4 @@ public class SubsCounterBot extends TelegramWebhookBot {
         sendPhoto.setCaption(imageCaption);
         execute(sendPhoto);
     }
-
-    @SneakyThrows
-    public void sendDocument(long chatId, String caption, File sendFile) {
-        SendDocument sendDocument = new SendDocument();
-        sendDocument.setChatId(chatId);
-        sendDocument.setCaption(caption);
-        sendDocument.setDocument(sendFile);
-        execute(sendDocument);
-    }
-
 }

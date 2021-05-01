@@ -20,7 +20,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compile 'org.springframework.boot:spring-boot-starter-data-mongodb:2.2.1.RELEASE'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -30,10 +29,8 @@ dependencies {
     compile 'org.telegram:telegrambots-spring-boot-starter:4.7'
     compile 'com.vdurmont:emoji-java:5.1.1'
 
-    //region DB
-    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.0.0'
-    compile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
-    //endregion
+    // https://mvnrepository.com/artifact/org.brunocvcunha.instagram4j/instagram4j
+    implementation 'org.brunocvcunha.instagram4j:instagram4j:1.14'
 }
 
 test {

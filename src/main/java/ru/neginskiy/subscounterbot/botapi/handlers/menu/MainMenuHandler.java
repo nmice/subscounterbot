@@ -9,6 +9,9 @@ import ru.neginskiy.subscounterbot.service.MainMenuService;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
+/**
+ * Обработчик любых текстовых запросов не в процессе заполнения анкеты
+ */
 @Component
 public class MainMenuHandler implements InputMessageHandler {
     private ReplyMessagesService messagesService;
@@ -21,7 +24,8 @@ public class MainMenuHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        return mainMenuService.getMainMenuMessage(message.getChatId(), messagesService.getReplyText("reply.showMainMenu", Emojis.MAGE));
+        return mainMenuService.getMainMenuMessage(message.getChatId(),
+                messagesService.getReplyText("reply.showMainMenu", Emojis.SCROLL));
     }
 
     @Override

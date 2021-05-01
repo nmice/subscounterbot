@@ -8,33 +8,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * In-memory cache.
+ * Реализация кэша в памяти
  * usersBotStates: user_id and user's bot state
  * usersProfileData: user_id  and user's profile data.
+ * данных пользователя и состояний
  */
 @Component
-public class UserDataCache implements DataCache {
-    private Map<Integer, BotState> usersBotStates = new HashMap<>();
-    private Map<Integer, UserProfileData> usersProfileData = new HashMap<>();
+public class InMemoryDataCache implements DataCache {
+    private Map<Integer, BotState> botStateByUserIdMap = new HashMap<>();
+    private Map<Integer, UserProfileData> usersProfileByUserIdMap = new HashMap<>();
 
     @Override
     public void setUsersCurrentBotState(int userId, BotState botState) {
-        usersBotStates.put(userId, botState);
+        botStateByUserIdMap.put(userId, botState);
     }
 
     @Override
     public BotState getUsersCurrentBotState(int userId) {
-        BotState botState = usersBotStates.get(userId);
+        BotState botState = botStateByUserIdMap.get(userId);
         if (botState == null) {
-            botState = BotState.ASK_WILL_WE_WORK;
+            botState = BotState.ASK_READY;
         }
-
         return botState;
     }
 
     @Override
     public UserProfileData getUserProfileData(int userId) {
-        UserProfileData userProfileData = usersProfileData.get(userId);
+        UserProfileData userProfileData = usersProfileByUserIdMap.get(userId);
         if (userProfileData == null) {
             userProfileData = new UserProfileData();
         }
@@ -43,6 +43,6 @@ public class UserDataCache implements DataCache {
 
     @Override
     public void saveUserProfileData(int userId, UserProfileData userProfileData) {
-        usersProfileData.put(userId, userProfileData);
+        usersProfileByUserIdMap.put(userId, userProfileData);
     }
 }

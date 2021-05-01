@@ -7,6 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.neginskiy.subscounterbot.SubsCounterBot;
 
+/**
+ * Контроллер для обработки запроса от telegram-клиента
+ */
 @RestController
 public class WebHookController {
     private final SubsCounterBot telegramBot;

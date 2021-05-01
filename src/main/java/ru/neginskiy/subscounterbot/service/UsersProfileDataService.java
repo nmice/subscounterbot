@@ -2,32 +2,35 @@ package ru.neginskiy.subscounterbot.service;
 
 import org.springframework.stereotype.Service;
 import ru.neginskiy.subscounterbot.model.UserProfileData;
-import ru.neginskiy.subscounterbot.repository.UsersProfileMongoRepository;
+import ru.neginskiy.subscounterbot.repository.UserRepository;
 
 import java.util.List;
 
+/**
+ * Сервис работы с данными пользователя
+ */
 @Service
 public class UsersProfileDataService {
 
-    private UsersProfileMongoRepository profileMongoRepository;
+    UserRepository repository;
 
-    public UsersProfileDataService(UsersProfileMongoRepository profileMongoRepository) {
-        this.profileMongoRepository = profileMongoRepository;
+    public UsersProfileDataService(UserRepository repository) {
+        this.repository = repository;
     }
 
     public List<UserProfileData> getAllProfiles() {
-        return profileMongoRepository.findAll();
+        return repository.findAll();
     }
 
     public void saveUserProfileData(UserProfileData userProfileData) {
-        profileMongoRepository.save(userProfileData);
+        repository.save(userProfileData);
     }
 
     public void deleteUsersProfileData(String profileDataId) {
-        profileMongoRepository.deleteById(profileDataId);
+        repository.deleteById(profileDataId);
     }
 
     public UserProfileData getUserProfileData(long chatId) {
-        return profileMongoRepository.findByChatId(chatId);
+        return repository.findByChatId(chatId);
     }
 }
