@@ -94,7 +94,6 @@ public class FillingProfileHandler implements InputMessageHandler {
 
             String profileFilledMessage = messagesService.getReplyText("reply.profileFilled", Emojis.SPARKLES);
             String statMessage = statService.getStatistic(profileData);
-
             replyToUser = new SendMessage(chatId, String.format("%s%n%n%s", profileFilledMessage, statMessage));
             replyToUser.setParseMode("HTML");
         }
