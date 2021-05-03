@@ -60,7 +60,7 @@ public class SubsCounterBot extends TelegramWebhookBot {
 
     @SneakyThrows
     public void sendPhoto(long chatId, String imageCaption, String imagePath) {
-        File image = ResourceUtils.getFile("classpath:" + imagePath);
+        File image = ResourceUtils.getFile("classpath*:" + imagePath);
         SendPhoto sendPhoto = new SendPhoto().setPhoto(image);
         sendPhoto.setChatId(chatId);
         sendPhoto.setCaption(imageCaption);
