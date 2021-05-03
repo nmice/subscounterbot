@@ -1,7 +1,9 @@
 package ru.neginskiy.subscounterbot.botapi.handlers.menu;
 
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.neginskiy.subscounterbot.botapi.BotState;
 import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
@@ -24,12 +26,23 @@ public class MainMenuHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        return mainMenuService.getMainMenuMessage(message.getChatId(),
-                messagesService.getReplyText("reply.showMainMenu", Emojis.SCROLL));
+        long chatId = message.getChatId();
+        return getMainMenuMessage(chatId);
+    }
+
+    @Override
+    public BotApiMethod<?> processCallBack(CallbackQuery buttonQuery) {
+        long chatId = buttonQuery.getMessage().getChatId();
+        return getMainMenuMessage(chatId);
     }
 
     @Override
     public BotState getHandlerName() {
         return BotState.SHOW_MAIN_MENU;
+    }
+
+    private SendMessage getMainMenuMessage(long chatId) {
+        return mainMenuService.getMainMenuMessage(chatId,
+                messagesService.getReplyText("reply.showMainMenu", Emojis.SCROLL));
     }
 }

@@ -92,8 +92,10 @@ public class TelegramFacade {
         BotState botState;
         switch (inputMsg) {
             case "buttonYes":
-            case "buttonNo":
                 botState = BotState.ASK_READY;
+                break;
+            case "buttonNo":
+                botState = BotState.SHOW_MAIN_MENU;
                 break;
             case "InstaYes":
             case "InstaNo":
