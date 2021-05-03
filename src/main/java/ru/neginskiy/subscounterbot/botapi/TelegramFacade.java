@@ -66,7 +66,10 @@ public class TelegramFacade {
 
         switch (inputMsg) {
             case "/start":
-                subsCounterBot.sendPhoto(chatId, messagesService.getReplyText("reply.hello"), "static/images/subscounterbot.jpg");
+                subsCounterBot.sendPhoto(chatId,
+                        messagesService.getReplyText("reply.hello"),
+                        "static/images/subscounterbot.jpg",
+                        "subscounterbot");
                 botState = BotState.ASK_READY;
                 break;
             case "Получить инфо по аккаунту":
