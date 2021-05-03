@@ -29,8 +29,10 @@ dependencies {
     compile 'org.telegram:telegrambots-spring-boot-starter:4.7'
     compile 'com.vdurmont:emoji-java:5.1.1'
 
-    // https://mvnrepository.com/artifact/org.brunocvcunha.instagram4j/instagram4j
+    // API соцсетей
     implementation 'org.brunocvcunha.instagram4j:instagram4j:1.14'
+    implementation 'com.google.api-client:google-api-client:1.31.1'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
 }
 
 test {

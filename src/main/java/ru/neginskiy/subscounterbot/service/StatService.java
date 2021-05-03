@@ -1,9 +1,5 @@
 package ru.neginskiy.subscounterbot.service;
 
-import org.brunocvcunha.instagram4j.Instagram4j;
-import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
-import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.neginskiy.subscounterbot.model.UserData;
 import ru.neginskiy.subscounterbot.utils.Emojis;
@@ -13,60 +9,37 @@ import ru.neginskiy.subscounterbot.utils.Emojis;
  */
 @Service
 public class StatService {
-    private ReplyMessagesService messagesService;
-    @Value("${social.instaLogin}")
-    private String instaLogin;
-    @Value("${social.instaPassword}")
-    private String instaPassword;
+    private final CommentService commentService;
+    private final InstaService instaService;
+    private final YouTubeService youTubeService;
 
-
-    public StatService(ReplyMessagesService messagesService) {
-        this.messagesService = messagesService;
+    public StatService(CommentService commentService,
+                       InstaService instaService,
+                       YouTubeService youTubeService) {
+        this.commentService = commentService;
+        this.instaService = instaService;
+        this.youTubeService = youTubeService;
     }
 
     public String getStatistic(UserData profileData) {
-        String instaSubs = getInstaSubsCount(profileData.getInsta());
+        String instaSubs = instaService.getInstaSubsCount(profileData.getInsta());
+        String instaComment = commentService.getCommentBySubsCount(instaSubs);
         String twitterSubs = getTwitterSubsCount(profileData.getTwitter());
-        String youtubeSubs = getYouTubeSubsCount(profileData.getYouTube());
+        String youtubeSubs = youTubeService.getYouTubeSubsCount(profileData.getYouTube());
+        String youTubeComment = commentService.getCommentBySubsCount(youtubeSubs);
 
         String replyMessagePropertie = String.format(
-                "%s %s: %s\r\n%s %s: %s\r\n%s %s: %s\r\n",
-                Emojis.STAR, "INSTAGRAM", instaSubs,
+                "%s %s: %s <i>%s</i>\r\n%s %s: %s\r\n%s %s: %s <i>%s</i>\r\n",
+                Emojis.STAR, "INSTAGRAM", instaSubs, instaComment,
                 Emojis.STAR, "TWITTER", twitterSubs,
-                Emojis.STAR, "YOUTUBE", youtubeSubs
+                Emojis.STAR, "YOUTUBE", youtubeSubs, youTubeComment
         );
         return replyMessagePropertie;
-    }
-
-    private String getYouTubeSubsCount(String youTube) {
-        return "Не реализовано";
     }
 
     private String getTwitterSubsCount(String twitter) {
         return "Не реализовано";
     }
 
-    private String getInstaSubsCount(String insta) {
-        Instagram4j instagram = Instagram4j.builder()
-                .username(instaLogin)
-                .password(instaPassword)
-                .build();
-        try {
-            instagram.setup();
-            instagram.login();
-            InstagramSearchUsernameResult usernameResult = instagram.sendRequest(new InstagramSearchUsernameRequest(insta));
-            int subsCount = usernameResult.getUser().getFollower_count();
-            int subsLevel = String.valueOf(usernameResult.getUser().getFollower_count()).length();
-            String comment;
-            if (subsLevel <= 5) {
-                comment = messagesService.getReplyText("reply.level" + subsLevel);
-            } else {
-                comment = messagesService.getReplyText("reply.level" + 6);
-            }
-            return String.format("%d <i>%s</i>", subsCount, comment);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "Неизвестно";
-    }
+
 }
