@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* ru.neginskiy.subscounterbot.Application
+web: java -jar build/libs/subscounterbot-0.0.1.jar
