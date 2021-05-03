@@ -1,17 +1,21 @@
 package ru.neginskiy.subscounterbot.botapi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Контекст состояний
  */
 @Component
+@Slf4j
 public class BotStateContext {
     private Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
 
@@ -19,9 +23,16 @@ public class BotStateContext {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandlerName(), handler));
     }
 
-    public SendMessage processInputMessage(BotState currentState, Message message) {
+    public BotApiMethod<?> processInputMessage(BotState currentState, BotApiObject botApiObject) {
         InputMessageHandler currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.handle(message);
+        if (botApiObject instanceof Message) {
+            return currentMessageHandler.handle((Message) botApiObject);
+        } else if (botApiObject instanceof CallbackQuery) {
+            return currentMessageHandler.processCallBack((CallbackQuery) botApiObject);
+        } else {
+            log.error("Illegal input type");
+            throw new IllegalArgumentException();
+        }
     }
 
     private InputMessageHandler findMessageHandler(BotState currentState) {
@@ -46,6 +57,4 @@ public class BotStateContext {
                 return false;
         }
     }
-
-
 }

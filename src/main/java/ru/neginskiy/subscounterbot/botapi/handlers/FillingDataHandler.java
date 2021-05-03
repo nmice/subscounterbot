@@ -2,16 +2,18 @@ package ru.neginskiy.subscounterbot.botapi.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.neginskiy.subscounterbot.botapi.BotState;
 import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
 import ru.neginskiy.subscounterbot.cache.DataCache;
 import ru.neginskiy.subscounterbot.model.UserData;
+import ru.neginskiy.subscounterbot.service.ButtonsProvider;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 import ru.neginskiy.subscounterbot.service.StatService;
 import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
-import ru.neginskiy.subscounterbot.service.ButtonsProvider;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
 /**
@@ -42,6 +44,48 @@ public class FillingDataHandler implements InputMessageHandler {
             userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_INSTA);
         }
         return processUsersInput(message);
+    }
+
+    @Override
+    public BotApiMethod<?> processCallBack(CallbackQuery buttonQuery) {
+        BotApiMethod<?> callBackAnswer = null;
+        long chatId = buttonQuery.getMessage().getChatId();
+        int userId = buttonQuery.getFrom().getId();
+
+        // Обработка ответа по кнопкам на экране Insta
+        if (buttonQuery.getData().equals("InstaYes")) {
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_INSTA_LOGIN);
+            callBackAnswer = messagesService.getReplyMessageFromLocale(chatId, "reply.askInstaLogin");
+        } else if (buttonQuery.getData().equals("InstaNo")) {
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TWITTER);
+            SendMessage replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askTwitter");
+            replyToUser.setReplyMarkup(buttonsProvider.getYesNoButtonsMarkup("TwitterYes", "TwitterNo"));
+            callBackAnswer = replyToUser;
+        }
+
+        // Обработка ответа по кнопкам на экране Twitter
+        else if (buttonQuery.getData().equals("TwitterYes")) {
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TWITTER_LOGIN);
+            callBackAnswer = messagesService.getReplyMessageFromLocale(chatId, "reply.askTwitterLogin");
+        } else if (buttonQuery.getData().equals("TwitterNo")) {
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE);
+            SendMessage replyToUser = messagesService.getReplyMessageFromLocale(chatId, "reply.askYouTube");
+            replyToUser.setReplyMarkup(buttonsProvider.getYesNoButtonsMarkup("YouTubeYes", "YouTubeNo"));
+            callBackAnswer = replyToUser;
+        }
+
+        // Обработка ответа по кнопкам на экране YouTube
+        else if (buttonQuery.getData().equals("YouTubeYes")) {
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_YOUTUBE_LOGIN);
+            callBackAnswer = messagesService.getReplyMessageFromLocale(chatId, "reply.askYouTubeLogin");
+        } else if (buttonQuery.getData().equals("YouTubeNo")) {
+            userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
+            callBackAnswer = messagesService.getReplyMessageFromLocale(chatId, "reply.profileFilled");
+        } else {
+            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+        }
+
+        return callBackAnswer;
     }
 
     @Override

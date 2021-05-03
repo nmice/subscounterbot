@@ -22,7 +22,6 @@ public class ButtonsProvider {
         InlineKeyboardButton buttonIwillThink = new InlineKeyboardButton().setText("Я подумаю");
         InlineKeyboardButton buttonIdontKnow = new InlineKeyboardButton().setText("Еще не определился");
 
-        //Every button must have callBackData, or else not work !
         buttonYes.setCallbackData("buttonYes");
         buttonNo.setCallbackData("buttonNo");
         buttonIwillThink.setCallbackData("buttonIwillThink");
