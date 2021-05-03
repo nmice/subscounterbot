@@ -12,34 +12,32 @@ public class StatService {
     private final CommentService commentService;
     private final InstaService instaService;
     private final YouTubeService youTubeService;
+    private final TwitterService twitterService;
 
     public StatService(CommentService commentService,
                        InstaService instaService,
-                       YouTubeService youTubeService) {
+                       YouTubeService youTubeService,
+                       TwitterService twitterService) {
         this.commentService = commentService;
         this.instaService = instaService;
         this.youTubeService = youTubeService;
+        this.twitterService = twitterService;
     }
 
     public String getStatistic(UserData profileData) {
         String instaSubs = instaService.getInstaSubsCount(profileData.getInsta());
         String instaComment = commentService.getCommentBySubsCount(instaSubs);
-        String twitterSubs = getTwitterSubsCount(profileData.getTwitter());
+        String twitterSubs = twitterService.getTwitterSubsCount(profileData.getTwitter());
+        String twitterComment = commentService.getCommentBySubsCount(twitterSubs);
         String youtubeSubs = youTubeService.getYouTubeSubsCount(profileData.getYouTube());
         String youTubeComment = commentService.getCommentBySubsCount(youtubeSubs);
 
         String replyMessagePropertie = String.format(
-                "%s %s: %s <i>%s</i>\r\n%s %s: %s\r\n%s %s: %s <i>%s</i>\r\n",
+                "%s %s: %s <i>%s</i>\r\n%s %s: %s <i>%s</i>\r\n%s %s: %s <i>%s</i>\r\n",
                 Emojis.STAR, "INSTAGRAM", instaSubs, instaComment,
-                Emojis.STAR, "TWITTER", twitterSubs,
+                Emojis.STAR, "TWITTER", twitterSubs, twitterComment,
                 Emojis.STAR, "YOUTUBE", youtubeSubs, youTubeComment
         );
         return replyMessagePropertie;
     }
-
-    private String getTwitterSubsCount(String twitter) {
-        return "Не реализовано";
-    }
-
-
 }
