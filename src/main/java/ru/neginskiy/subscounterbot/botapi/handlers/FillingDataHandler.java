@@ -48,9 +48,10 @@ public class FillingDataHandler implements InputMessageHandler {
 
     @Override
     public BotApiMethod<?> processCallBack(CallbackQuery buttonQuery) {
-        BotApiMethod<?> callBackAnswer = null;
-        long chatId = buttonQuery.getMessage().getChatId();
         int userId = buttonQuery.getFrom().getId();
+        UserData profileData = userDataCache.getUserProfileData(userId);
+        long chatId = buttonQuery.getMessage().getChatId();
+        BotApiMethod<?> callBackAnswer = null;
 
         // Обработка ответа по кнопкам на экране Insta
         if (buttonQuery.getData().equals("InstaYes")) {
@@ -80,12 +81,20 @@ public class FillingDataHandler implements InputMessageHandler {
             callBackAnswer = messagesService.getReplyMessageFromLocale(chatId, "reply.askYouTubeLogin");
         } else if (buttonQuery.getData().equals("YouTubeNo")) {
             userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
-            callBackAnswer = messagesService.getReplyMessageFromLocale(chatId, "reply.profileFilled");
+            callBackAnswer = getResultMessage(profileData, chatId);
         } else {
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         }
 
         return callBackAnswer;
+    }
+
+    private SendMessage getResultMessage(UserData profileData, long chatId) {
+        String profileFilledMessage = messagesService.getReplyText("reply.profileFilled", Emojis.SPARKLES);
+        String statMessage = statService.getStatistic(profileData);
+        SendMessage replyToUser = new SendMessage(chatId, String.format("%s%n%n%s", profileFilledMessage, statMessage));
+        replyToUser.setParseMode("HTML");
+        return replyToUser;
     }
 
     @Override
@@ -132,14 +141,9 @@ public class FillingDataHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_YOUTUBE_LOGIN)) {
             userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
             profileData.setYouTube(usersAnswer);
-
             profileData.setChatId(chatId);
             profileDataService.saveUserProfileData(profileData);
-
-            String profileFilledMessage = messagesService.getReplyText("reply.profileFilled", Emojis.SPARKLES);
-            String statMessage = statService.getStatistic(profileData);
-            replyToUser = new SendMessage(chatId, String.format("%s%n%n%s", profileFilledMessage, statMessage));
-            replyToUser.setParseMode("HTML");
+            replyToUser = getResultMessage(profileData, chatId);
         }
 
         userDataCache.saveUserProfileData(userId, profileData);
