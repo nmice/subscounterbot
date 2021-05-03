@@ -1,1 +1,0 @@
-web: java -jar build/libs/subscounterbot-0.0.1.jar
