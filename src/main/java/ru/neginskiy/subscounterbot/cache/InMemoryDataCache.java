@@ -8,10 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Реализация кэша в памяти
- * usersBotStates: user_id and user's bot state
- * usersProfileData: user_id  and user's profile data.
- * данных пользователя и состояний
+ * Реализация кэша в памяти данных пользователя и состояний
  */
 @Component
 public class InMemoryDataCache implements DataCache {
