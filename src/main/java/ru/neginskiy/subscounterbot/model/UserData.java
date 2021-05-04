@@ -14,7 +14,7 @@ import java.util.Random;
 @Data
 public class UserData implements Serializable {
     private String id = new Random().toString();
-    private Map<SocialMediaType, String> accNameBySmTypeMap = new HashMap<>();
+    private final Map<SocialMediaType, String> accNameBySmTypeMap = new HashMap<>();
     private String twitter;
     private String youTube;
 
