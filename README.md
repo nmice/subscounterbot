@@ -1,4 +1,4 @@
-# SubsCounterBot - проектная работа для курса "Разработчик Java" в OTUS
+# SubsCounterBot - проектная работа "Разработчик Java" в OTUS
 
 Тема: "Telegram-бот для краткой статистики из социальных сетей"
 
@@ -15,4 +15,4 @@
 Студент:
 Mikhail Neginskiy (Михаил Негинский) n.mice@mail.ru
 
-![image](https://user-images.githubusercontent.com/39015134/117063767-f5913580-ad2d-11eb-8f2e-aa18a83e2d79.png)
+![image](https://user-images.githubusercontent.com/39015134/117063957-37ba7700-ad2e-11eb-9c4b-be773c48ecd0.png)
