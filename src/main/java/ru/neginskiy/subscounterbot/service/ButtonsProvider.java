@@ -13,11 +13,20 @@ import java.util.List;
  */
 @Component
 public class ButtonsProvider {
+    private final LocaleMessageService localeMessageService;
+    private final String yes;
+    private final String no;
+
+    public ButtonsProvider(LocaleMessageService localeMessageService) {
+        this.localeMessageService = localeMessageService;
+        this.yes = localeMessageService.getMessage("reply.yes");
+        this.no = localeMessageService.getMessage("reply.no");
+    }
 
     public InlineKeyboardMarkup getYesNoButtonsMarkup(String asYes, String asNo) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        InlineKeyboardButton buttonYes = new InlineKeyboardButton().setText("Да");
-        InlineKeyboardButton buttonNo = new InlineKeyboardButton().setText("Нет");
+        InlineKeyboardButton buttonYes = new InlineKeyboardButton().setText(yes);
+        InlineKeyboardButton buttonNo = new InlineKeyboardButton().setText(no);
 
         //У всех кнопок должно быть задано callBackData, иначе будет ошибка !
         buttonYes.setCallbackData(asYes);
