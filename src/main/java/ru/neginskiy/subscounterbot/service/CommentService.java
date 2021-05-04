@@ -11,8 +11,8 @@ public class CommentService {
         this.messagesService = messagesService;
     }
 
-    public String getCommentBySubsCount(String subsCount){
-        if (subsCount.equals("Неизвестно")){
+    public String getCommentBySubsCount(String subsCount) {
+        if (subsCount.equals("Неизвестно")) {
             return StringUtils.EMPTY;
         }
         int subsLevel = subsCount.length();

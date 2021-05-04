@@ -22,15 +22,14 @@ import ru.neginskiy.subscounterbot.utils.Emojis;
 @Slf4j
 @Component
 public class FillingDataHandler implements InputMessageHandler {
-    private DataCache userDataCache;
-    private ReplyMessagesService messagesService;
-    private StatService statService;
-    private UsersProfileDataService profileDataService;
-    private ButtonsProvider buttonsProvider;
+    private final DataCache userDataCache;
+    private final ReplyMessagesService messagesService;
+    private final StatService statService;
+    private final UsersProfileDataService profileDataService;
+    private final ButtonsProvider buttonsProvider;
 
-    public FillingDataHandler(DataCache userDataCache, ReplyMessagesService messagesService,
-                              StatService statService, UsersProfileDataService profileDataService,
-                              ButtonsProvider buttonsProvider) {
+    public FillingDataHandler(DataCache userDataCache, ReplyMessagesService messagesService, StatService statService,
+                              UsersProfileDataService profileDataService, ButtonsProvider buttonsProvider) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
         this.statService = statService;

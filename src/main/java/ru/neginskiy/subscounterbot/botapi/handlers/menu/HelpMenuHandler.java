@@ -14,8 +14,8 @@ import ru.neginskiy.subscounterbot.utils.Emojis;
  */
 @Component
 public class HelpMenuHandler implements InputMessageHandler {
-    private MainMenuService mainMenuService;
-    private ReplyMessagesService messagesService;
+    private final MainMenuService mainMenuService;
+    private final ReplyMessagesService messagesService;
 
     public HelpMenuHandler(MainMenuService mainMenuService, ReplyMessagesService messagesService) {
         this.mainMenuService = mainMenuService;

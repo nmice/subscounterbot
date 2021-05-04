@@ -1,5 +1,6 @@
 package ru.neginskiy.subscounterbot;
 
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.core.io.ClassPathResource;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -14,12 +15,12 @@ import java.io.InputStream;
 /**
  * Класс бота
  */
+@Setter
 public class SubsCounterBot extends TelegramWebhookBot {
+    private final TelegramFacade telegramFacade;
     private String webHookPath;
     private String botUserName;
     private String botToken;
-
-    private TelegramFacade telegramFacade;
 
     public SubsCounterBot(DefaultBotOptions botOptions, TelegramFacade telegramFacade) {
         super(botOptions);
@@ -44,18 +45,6 @@ public class SubsCounterBot extends TelegramWebhookBot {
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         return telegramFacade.handleUpdate(update);
-    }
-
-    public void setWebHookPath(String webHookPath) {
-        this.webHookPath = webHookPath;
-    }
-
-    public void setBotUserName(String botUserName) {
-        this.botUserName = botUserName;
-    }
-
-    public void setBotToken(String botToken) {
-        this.botToken = botToken;
     }
 
     @SneakyThrows

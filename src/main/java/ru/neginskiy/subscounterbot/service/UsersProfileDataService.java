@@ -11,8 +11,7 @@ import java.util.List;
  */
 @Service
 public class UsersProfileDataService {
-
-    UserRepository repository;
+    private final UserRepository repository;
 
     public UsersProfileDataService(UserRepository repository) {
         this.repository = repository;

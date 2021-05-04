@@ -14,9 +14,7 @@ public class StatService {
     private final YouTubeService youTubeService;
     private final TwitterService twitterService;
 
-    public StatService(CommentService commentService,
-                       InstaService instaService,
-                       YouTubeService youTubeService,
+    public StatService(CommentService commentService, InstaService instaService, YouTubeService youTubeService,
                        TwitterService twitterService) {
         this.commentService = commentService;
         this.instaService = instaService;
@@ -31,13 +29,11 @@ public class StatService {
         String twitterComment = commentService.getCommentBySubsCount(twitterSubs);
         String youtubeSubs = youTubeService.getYouTubeSubsCount(profileData.getYouTube());
         String youTubeComment = commentService.getCommentBySubsCount(youtubeSubs);
-
-        String replyMessagePropertie = String.format(
+        return String.format(
                 "%s %s: %s <i>%s</i>\r\n%s %s: %s <i>%s</i>\r\n%s %s: %s <i>%s</i>\r\n",
                 Emojis.STAR, "INSTAGRAM", instaSubs, instaComment,
                 Emojis.STAR, "TWITTER", twitterSubs, twitterComment,
                 Emojis.STAR, "YOUTUBE", youtubeSubs, youTubeComment
         );
-        return replyMessagePropertie;
     }
 }

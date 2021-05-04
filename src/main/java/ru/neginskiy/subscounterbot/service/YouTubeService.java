@@ -15,8 +15,7 @@ import java.util.List;
 
 @Service
 public class YouTubeService {
-
-    public final String youTubeApiKey;
+    private final String youTubeApiKey;
 
     public YouTubeService(@Value("${social.youTubeApiKey}") String youTubeApiKey) {
         this.youTubeApiKey = youTubeApiKey;

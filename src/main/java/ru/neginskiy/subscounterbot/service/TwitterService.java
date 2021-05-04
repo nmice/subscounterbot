@@ -14,7 +14,9 @@ public class TwitterService {
             TwitterResponseDto[] stringPosts = restTemplate.getForObject(
                     String.format("https://cdn.syndication.twimg.com/widgets/followbutton/info.json?screen_names=%s", twitter),
                     TwitterResponseDto[].class);
-            return String.valueOf(stringPosts[0].getFollowers_count());
+            if (stringPosts != null && stringPosts.length > 0) {
+                return String.valueOf(stringPosts[0].getFollowers_count());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -19,11 +19,12 @@ import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 @Slf4j
 @Component
 public class AskReadyHandler implements InputMessageHandler {
-    private DataCache userDataCache;
-    private ReplyMessagesService messagesService;
-    private ButtonsProvider buttonsProvider;
+    private final DataCache userDataCache;
+    private final ReplyMessagesService messagesService;
+    private final ButtonsProvider buttonsProvider;
 
-    public AskReadyHandler(DataCache userDataCache, ReplyMessagesService messagesService, ButtonsProvider buttonsProvider) {
+    public AskReadyHandler(DataCache userDataCache, ReplyMessagesService messagesService,
+                           ButtonsProvider buttonsProvider) {
         this.messagesService = messagesService;
         this.buttonsProvider = buttonsProvider;
         this.userDataCache = userDataCache;

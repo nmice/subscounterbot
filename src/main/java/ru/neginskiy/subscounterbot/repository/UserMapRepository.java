@@ -13,7 +13,8 @@ import java.util.Map;
  */
 @Repository
 public class UserMapRepository implements UserRepository {
-    Map<String, UserData> repository = new HashMap<>();
+
+    private final Map<String, UserData> repository = new HashMap<>();
 
     @Override
     public List<UserData> findAll() {

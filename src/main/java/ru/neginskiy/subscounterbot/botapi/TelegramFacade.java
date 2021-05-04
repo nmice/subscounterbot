@@ -9,8 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.neginskiy.subscounterbot.SubsCounterBot;
 import ru.neginskiy.subscounterbot.cache.DataCache;
-import ru.neginskiy.subscounterbot.service.ButtonsProvider;
-import ru.neginskiy.subscounterbot.service.MainMenuService;
 import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 
 /**
@@ -19,22 +17,17 @@ import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
 @Component
 @Slf4j
 public class TelegramFacade {
-    private BotStateContext botStateContext;
-    private DataCache userDataCache;
-    private MainMenuService mainMenuService;
-    private SubsCounterBot subsCounterBot;
-    private ReplyMessagesService messagesService;
-    private ButtonsProvider buttonsProvider;
+    private final BotStateContext botStateContext;
+    private final DataCache userDataCache;
+    private final SubsCounterBot subsCounterBot;
+    private final ReplyMessagesService messagesService;
 
     public TelegramFacade(BotStateContext botStateContext, DataCache userDataCache,
-                          MainMenuService mainMenuService, @Lazy SubsCounterBot subsCounterBot,
-                          ReplyMessagesService messagesService, ButtonsProvider buttonsProvider) {
+                          @Lazy SubsCounterBot subsCounterBot, ReplyMessagesService messagesService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
-        this.mainMenuService = mainMenuService;
         this.subsCounterBot = subsCounterBot;
         this.messagesService = messagesService;
-        this.buttonsProvider = buttonsProvider;
     }
 
     public BotApiMethod<?> handleUpdate(Update update) {

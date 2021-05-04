@@ -17,13 +17,11 @@ public class MainMenuService {
 
     public SendMessage getMainMenuMessage(long chatId, String textMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
-        SendMessage mainMenuMessage =
-                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
+        SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
         return mainMenuMessage;
     }
 
     private ReplyKeyboardMarkup getMainMenuKeyboard() {
-
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);

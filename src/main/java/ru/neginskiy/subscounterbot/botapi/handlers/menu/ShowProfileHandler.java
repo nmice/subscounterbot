@@ -14,8 +14,8 @@ import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
  */
 @Component
 public class ShowProfileHandler implements InputMessageHandler {
-    private DataCache userDataCache;
-    private UsersProfileDataService profileDataService;
+    private final DataCache userDataCache;
+    private final UsersProfileDataService profileDataService;
 
     public ShowProfileHandler(DataCache userDataCache, UsersProfileDataService profileDataService) {
         this.userDataCache = userDataCache;
