@@ -2,6 +2,7 @@ package ru.neginskiy.subscounterbot.config;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,8 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 import ru.neginskiy.subscounterbot.SubsCounterBot;
 import ru.neginskiy.subscounterbot.botapi.TelegramFacade;
+
+import java.util.Locale;
 
 /**
  * Конфигурация бота
@@ -25,6 +28,11 @@ public class BotConfig {
     private String botToken;
 
     @Bean
+    public Locale locale(@Value("${localeTag}") String localeTag) {
+        return Locale.forLanguageTag(localeTag);
+    }
+
+    @Bean
     public SubsCounterBot subsCounterBot(TelegramFacade telegramFacade) {
         DefaultBotOptions options = ApiContext
                 .getInstance(DefaultBotOptions.class);
@@ -33,7 +41,6 @@ public class BotConfig {
         subsCounterBot.setBotUserName(botUserName);
         subsCounterBot.setBotToken(botToken);
         subsCounterBot.setWebHookPath(webHookPath);
-
         return subsCounterBot;
     }
 

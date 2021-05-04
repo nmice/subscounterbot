@@ -14,11 +14,10 @@ public class LocaleMessageService {
     private final Locale locale;
     private final MessageSource messageSource;
 
-    public LocaleMessageService(@Value("${localeTag}") String localeTag, MessageSource messageSource) {
+    public LocaleMessageService(Locale locale, MessageSource messageSource) {
         this.messageSource = messageSource;
-        this.locale = Locale.forLanguageTag(localeTag);
+        this.locale = locale;
     }
-
 
     public String getMessage(String message) {
         return messageSource.getMessage(message, null, locale);
