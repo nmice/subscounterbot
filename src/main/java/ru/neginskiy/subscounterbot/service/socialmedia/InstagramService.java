@@ -1,4 +1,4 @@
-package ru.neginskiy.subscounterbot.service;
+package ru.neginskiy.subscounterbot.service.socialmedia;
 
 
 import org.brunocvcunha.instagram4j.Instagram4j;
@@ -7,18 +7,21 @@ import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResu
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис по работе с Instagram API через Instagram4j
+ */
 @Service
-public class InstaService {
+public class InstagramService implements SocialMediaService{
     private final String instaLogin;
     private final String instaPassword;
 
-    public InstaService(@Value("${social.instaLogin}") String instaLogin,
-                        @Value("${social.instaPassword}") String instaPassword) {
+    public InstagramService(@Value("${social.instaLogin}") String instaLogin,
+                            @Value("${social.instaPassword}") String instaPassword) {
         this.instaLogin = instaLogin;
         this.instaPassword = instaPassword;
     }
 
-    public String getInstaSubsCount(String insta) {
+    public String getSubsCount(String insta) {
         Instagram4j instagram = Instagram4j.builder()
                 .username(instaLogin)
                 .password(instaPassword)

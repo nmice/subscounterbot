@@ -7,7 +7,7 @@ import ru.neginskiy.subscounterbot.botapi.BotState;
 import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
 import ru.neginskiy.subscounterbot.cache.DataCache;
 import ru.neginskiy.subscounterbot.model.UserData;
-import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
+import ru.neginskiy.subscounterbot.service.UsersDataService;
 
 /**
  * Обработчик запроса данных по кнопке "Мои аккаунты"
@@ -15,22 +15,22 @@ import ru.neginskiy.subscounterbot.service.UsersProfileDataService;
 @Component
 public class ShowProfileHandler implements InputMessageHandler {
     private final DataCache userDataCache;
-    private final UsersProfileDataService profileDataService;
+    private final UsersDataService userDataService;
 
-    public ShowProfileHandler(DataCache userDataCache, UsersProfileDataService profileDataService) {
+    public ShowProfileHandler(DataCache userDataCache, UsersDataService userDataService) {
         this.userDataCache = userDataCache;
-        this.profileDataService = profileDataService;
+        this.userDataService = userDataService;
     }
 
     @Override
     public SendMessage handle(Message message) {
         int userId = message.getFrom().getId();
-        UserData profileData = profileDataService.getUserProfileData(message.getChatId());
+        UserData userData = userDataService.getUserProfileData(message.getChatId());
         userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         String description;
-        if (profileData != null) {
+        if (userData != null) {
             description = String.format("%s%n-------------------%n%s", "Данные по вашей анкете:",
-                    profileData.toString());
+                    userData.toString());
         } else {
             description = "Такой анкеты в БД не существует !";
         }

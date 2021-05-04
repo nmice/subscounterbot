@@ -1,4 +1,4 @@
-package ru.neginskiy.subscounterbot.service;
+package ru.neginskiy.subscounterbot.service.socialmedia;
 
 
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -13,15 +13,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Сервис по работе с YouTube API через YouTube Data API (v3)
+ */
 @Service
-public class YouTubeService {
+public class YouTubeService implements SocialMediaService {
     private final String youTubeApiKey;
 
     public YouTubeService(@Value("${social.youTubeApiKey}") String youTubeApiKey) {
         this.youTubeApiKey = youTubeApiKey;
     }
 
-    public String getYouTubeSubsCount(String youTube) {
+    public String getSubsCount(String youTube) {
         YouTube youtube = new YouTube.Builder(
                 new NetHttpTransport(),
                 new JacksonFactory(),

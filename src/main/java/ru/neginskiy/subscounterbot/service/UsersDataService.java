@@ -10,10 +10,10 @@ import java.util.List;
  * Сервис работы с данными пользователя
  */
 @Service
-public class UsersProfileDataService {
+public class UsersDataService {
     private final UserRepository repository;
 
-    public UsersProfileDataService(UserRepository repository) {
+    public UsersDataService(UserRepository repository) {
         this.repository = repository;
     }
 
@@ -25,8 +25,8 @@ public class UsersProfileDataService {
         repository.save(userData);
     }
 
-    public void deleteUsersProfileData(String profileDataId) {
-        repository.deleteById(profileDataId);
+    public void deleteUsersProfileData(String userId) {
+        repository.deleteById(userId);
     }
 
     public UserData getUserProfileData(long chatId) {

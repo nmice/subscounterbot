@@ -1,7 +1,12 @@
 package ru.neginskiy.subscounterbot.service;
 
 import org.springframework.stereotype.Service;
+import ru.neginskiy.subscounterbot.enums.SocialMediaType;
 import ru.neginskiy.subscounterbot.model.UserData;
+import ru.neginskiy.subscounterbot.service.socialmedia.InstagramService;
+import ru.neginskiy.subscounterbot.service.socialmedia.SocialMediaService;
+import ru.neginskiy.subscounterbot.service.socialmedia.TwitterService;
+import ru.neginskiy.subscounterbot.service.socialmedia.YouTubeService;
 import ru.neginskiy.subscounterbot.utils.Emojis;
 
 /**
@@ -10,30 +15,33 @@ import ru.neginskiy.subscounterbot.utils.Emojis;
 @Service
 public class StatService {
     private final CommentService commentService;
-    private final InstaService instaService;
+    private final InstagramService instagramService;
     private final YouTubeService youTubeService;
     private final TwitterService twitterService;
 
-    public StatService(CommentService commentService, InstaService instaService, YouTubeService youTubeService,
+    public StatService(CommentService commentService, InstagramService instagramService, YouTubeService youTubeService,
                        TwitterService twitterService) {
         this.commentService = commentService;
-        this.instaService = instaService;
+        this.instagramService = instagramService;
         this.youTubeService = youTubeService;
         this.twitterService = twitterService;
     }
 
-    public String getStatistic(UserData profileData) {
-        String instaSubs = instaService.getInstaSubsCount(profileData.getInsta());
-        String instaComment = commentService.getCommentBySubsCount(instaSubs);
-        String twitterSubs = twitterService.getTwitterSubsCount(profileData.getTwitter());
-        String twitterComment = commentService.getCommentBySubsCount(twitterSubs);
-        String youtubeSubs = youTubeService.getYouTubeSubsCount(profileData.getYouTube());
-        String youTubeComment = commentService.getCommentBySubsCount(youtubeSubs);
+    public String getStatistic(UserData userData) {
+        String instagramInfo = getSubsWithComment(instagramService, SocialMediaType.INSTAGRAM, userData);
+        String twitterInfo = getSubsWithComment(twitterService, SocialMediaType.TWITTER, userData);
+        String youTubeInfo = getSubsWithComment(youTubeService, SocialMediaType.YOUTUBE, userData);
         return String.format(
-                "%s %s: %s <i>%s</i>\r\n%s %s: %s <i>%s</i>\r\n%s %s: %s <i>%s</i>\r\n",
-                Emojis.STAR, "INSTAGRAM", instaSubs, instaComment,
-                Emojis.STAR, "TWITTER", twitterSubs, twitterComment,
-                Emojis.STAR, "YOUTUBE", youtubeSubs, youTubeComment
+                "%s %s: %s\r\n%s %s: %s\r\n%s %s: %s\r\n",
+                Emojis.STAR, "INSTAGRAM", instagramInfo,
+                Emojis.STAR, "TWITTER", twitterInfo,
+                Emojis.STAR, "YOUTUBE", youTubeInfo
         );
+    }
+
+    private String getSubsWithComment(SocialMediaService service, SocialMediaType type, UserData userData) {
+        String subs = service.getSubsCount(userData.getAccNameBySmTypeMap().get(type));
+        String comment = commentService.getCommentBySubsCount(subs);
+        return String.format("%s <i>%s</i>", subs, comment);
     }
 }
