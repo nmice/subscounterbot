@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.neginskiy.subscounterbot.enums.SocialMediaType;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -13,7 +14,7 @@ import java.util.Random;
 @Data
 public class UserData implements Serializable {
     private String id = new Random().toString();
-    private Map<SocialMediaType, String> accNameBySmTypeMap;
+    private Map<SocialMediaType, String> accNameBySmTypeMap = new HashMap<>();
     private String twitter;
     private String youTube;
 
