@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.neginskiy.subscounterbot.SubsCounterBot;
+import ru.neginskiy.subscounterbot.service.socialmedia.TwitterService;
 
 import java.time.LocalDateTime;
 
@@ -18,9 +19,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public class WebHookController {
     private final SubsCounterBot telegramBot;
+    private final TwitterService twitterService;
 
-    public WebHookController(SubsCounterBot telegramBot) {
+    public WebHookController(SubsCounterBot telegramBot, TwitterService twitterService) {
         this.telegramBot = telegramBot;
+        this.twitterService = twitterService;
     }
 
     @PostMapping("/")
@@ -28,8 +31,9 @@ public class WebHookController {
         return telegramBot.onWebhookUpdateReceived(update);
     }
 
-    @Scheduled(fixedDelay = 600000)
+    @Scheduled(fixedDelay = 60000)
     public void wakeUp() {
         log.info("WAKE UP,LAZY BOT! localDateTime: {} ;-)", LocalDateTime.now());
+        twitterService.getSubsCount("captainHook");
     }
 }
