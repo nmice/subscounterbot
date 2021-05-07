@@ -28,7 +28,7 @@ public class WebHookController {
         return telegramBot.onWebhookUpdateReceived(update);
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 600000)
     public void wakeUp() {
         log.info("WAKE UP,LAZY BOT! localDateTime: {} ;-)", LocalDateTime.now());
     }
