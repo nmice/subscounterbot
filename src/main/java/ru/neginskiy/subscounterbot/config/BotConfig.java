@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 import ru.neginskiy.subscounterbot.SubsCounterBot;
@@ -21,6 +22,7 @@ import java.util.Locale;
 @Setter
 @Getter
 @Configuration
+@EnableScheduling
 @ConfigurationProperties(prefix = "bot")
 public class BotConfig {
     private String webHookPath;
