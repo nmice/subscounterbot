@@ -1,0 +1,35 @@
+package ru.neginskiy.subscounterbot.botapi.handlers.menu;
+
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.neginskiy.subscounterbot.botapi.BotState;
+import ru.neginskiy.subscounterbot.botapi.InputMessageHandler;
+import ru.neginskiy.subscounterbot.service.MainMenuService;
+import ru.neginskiy.subscounterbot.service.ReplyMessagesService;
+import ru.neginskiy.subscounterbot.utils.Emojis;
+
+/**
+ * Обработчик запроса справки по кнопке "Помощь"
+ */
+@Component
+public class HelpMenuHandler implements InputMessageHandler {
+    private final MainMenuService mainMenuService;
+    private final ReplyMessagesService messagesService;
+
+    public HelpMenuHandler(MainMenuService mainMenuService, ReplyMessagesService messagesService) {
+        this.mainMenuService = mainMenuService;
+        this.messagesService = messagesService;
+    }
+
+    @Override
+    public SendMessage handle(Message message) {
+        return mainMenuService.getMainMenuMessage(message.getChatId(),
+                messagesService.getReplyText("reply.showHelpMenu", Emojis.MOYAI));
+    }
+
+    @Override
+    public BotState getHandlerName() {
+        return BotState.SHOW_HELP_MENU;
+    }
+}
